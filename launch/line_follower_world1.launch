@@ -8,15 +8,13 @@
 		<arg name="gui" value="true"/>
 	</include>
 
-	<!-- Spawn the car model -->
-	<include file="$(find navros_pkg)/launch/spawn_car.launch" />
+	<!-- Spawn the car model  -->
+	<include file="$(find navros_pkg)/launch/spawn_car.launch" /> 
 	
-	<!-- Publish fixed tfs -->	
+	 <!--Publish fixed tfs -->	
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
 		<remap from="/joint_states" to="/robot/joint_states" />
-	</node>
+	</node> 
 
-	<!-- Get laser scan readings -->
-	<include file="$(find navros_pkg)/launch/pctl.launch" />
 
 </launch>
