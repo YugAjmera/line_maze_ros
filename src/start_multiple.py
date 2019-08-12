@@ -54,29 +54,54 @@ class LineFollower(object):
 		# Bitwise-AND mask and original image
 		res = cv2.bitwise_and(crop_img,crop_img, mask= mask)
 
-		# Calculate centroid of the blob of binary image using ImageMoments
-		m = cv2.moments(mask, False)
-		try:
-			cx, cy = m['m10']/m['m00'], m['m01']/m['m00']
+		
+		# Multiple Centres
+		im2, contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+		centres = []
 
-			# Draw the centroid in the resultantt image
-			cv2.circle(res,(int(cx), int(cy)), 5,(0,0,255),-1)
+		for i in range(len(contours)):
+			moments = cv2.moments(contours[i])
+
+			try:
+				centres.append((int(moments['m10']/moments['m00']), int(moments['m01']/moments['m00'])))
+
+			except ZeroDivisionError: 
+				pass
+				
+
+		rospy.loginfo(str(centres))
+		#Select the left centroid
+		most_left_centroid_index = 0
+		index = 0
+		min_x_value = width
+
+		for y in centres:
+			# Retrieve the cx value
+			cx = y[0]
+			# Get the LEAST Cx value
+			if cx <= min_x_value:
+				min_x_value = cx
+				most_left_centroid_index = index
+			index += 1
+		try:
+			cx = centres[most_left_centroid_index][0]
+			cy = centres[most_left_centroid_index][1]
+			# rospy.loginfo("Min =="+str(cx)+","+str(cy)+"")
 			
+			cv2.circle(res,(int(cx), int(cy)), 5,(0,0,255),-1)
+
 			error_x = cx - width / 2;
 			twist_object = Twist();
 			twist_object.linear.x = 0.5;
 			twist_object.angular.z = -error_x / 50;
-
 			self.moverobot_object.move_robot(twist_object)
-			
-		except ZeroDivisionError: # When no line is found - Recovery Behaviour
+
+		except: # When no line is found - Recovery Behaviour
 			rospy.loginfo("Finding Target...")
 			twist_object = Twist()
 			twist_object.angular.z = 1
 			self.moverobot_object.move_robot(twist_object)
-
 		
-
 		cv2.imshow("Original", cv_image)
 		cv2.imshow("RES", res)
 		cv2.waitKey(1)

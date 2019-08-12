@@ -3,7 +3,7 @@
 	
 	<!-- Launch custom world Gazebo  -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" default="$(find line_follower_ros)/worlds/lf.world"/>
+		<arg name="world_name" default="$(find line_follower_ros)/worlds/lf2.world"/>
 		<arg name="paused" value="false"/>
 		<arg name="gui" value="true"/>
 	</include>
