@@ -3,18 +3,18 @@
 	
 	<!-- Launch custom world Gazebo  -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" default="$(find line_follower_ros)/worlds/lf1.world"/>
+		<arg name="world_name" default="$(find line_follower_ros)/worlds/lf2.world"/>
 		<arg name="paused" value="false"/>
 		<arg name="gui" value="true"/>
 	</include>
 
-	<!-- Spawn the car model  -->
-	<include file="$(find navros_pkg)/launch/spawn_car.launch" /> 
+	<!-- Spawn the car model --> 
+	<include file="$(find line_follower_ros)/launch/spawn_car.launch" />
 	
-	 <!--Publish fixed tfs -->	
-	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-		<remap from="/joint_states" to="/robot/joint_states" />
-	</node> 
+	 <!--Publish fixed tfs 	-->
 
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+		<remap from="/joint_states" to="/robot/joint_states" /> 
+	</node> 
 
 </launch>
