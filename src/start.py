@@ -24,16 +24,15 @@ class LineFollower(object):
 			print(e)
 
 		
-		# We get image dimensions and crop the parts of the image we don't need
-		# Bear in mind that because the first value of the image matrix is start and second value is down limit.
-		# Select the limits so that it gets the line not too close and not too far, and the minimum portion possible
-		# To make process faster.
+		# Crop the image
 		height, width, channels = cv_image.shape
-		descentre = 160
+		descentre = 200
 		rows_to_watch = 20
 		crop_img = cv_image[(height)/2+descentre:(height)/2+(descentre+rows_to_watch)][1:width]
+
 		# Convert from RGB to HSV
 		hsv = cv2.cvtColor(crop_img, cv2.COLOR_BGR2HSV)
+
 		# Define the Yellow Colour in HSV
 		#RGB
 		#[[[222,255,0]]]
@@ -48,34 +47,40 @@ class LineFollower(object):
 		"""
 		lower_yellow = np.array([20,100,100])
 		upper_yellow = np.array([50,255,255])
+
 		# Threshold the HSV image to get only yellow colors
 		mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+	
+		# Bitwise-AND mask and original image
+		res = cv2.bitwise_and(crop_img,crop_img, mask= mask)
+
 		# Calculate centroid of the blob of binary image using ImageMoments
 		m = cv2.moments(mask, False)
 		try:
 			cx, cy = m['m10']/m['m00'], m['m01']/m['m00']
-		except ZeroDivisionError:
-			cy, cx = height/2, width/2
 
-		# Bitwise-AND mask and original image
-		res = cv2.bitwise_and(crop_img,crop_img, mask= mask)
-		# Draw the centroid in the resultut image
-		# cv2.circle(img, center, radius, color[, thickness[, lineType[, shift]]])
-		cv2.circle(res,(int(cx), int(cy)), 5,(0,0,255),-1)
+			# Draw the centroid in the resultut image
+			cv2.circle(res,(int(cx), int(cy)), 5,(0,0,255),-1)
+			
+			error_x = cx - width / 2;
+			twist_object = Twist();
+			twist_object.linear.x = 0.2;
+			twist_object.angular.z = -error_x / 200;
+
+			self.moverobot_object.move_robot(twist_object)
+			
+		except ZeroDivisionError: # When no line is found
+			rospy.loginfo("Finding Target...")
+			twist_object = Twist()
+			twist_object.angular.z = 0.5
+			self.moverobot_object.move_robot(twist_object)
+
+		
+
 		cv2.imshow("Original", cv_image)
-		cv2.imshow("HSV", hsv)
-		cv2.imshow("MASK", mask)
 		cv2.imshow("RES", res)
 		cv2.waitKey(1)
 
-		error_x = cx - width / 2;
-		twist_object = Twist();
-		twist_object.linear.x = 0.2;
-		twist_object.angular.z = -error_x / 200;
-		rospy.loginfo("ANGULAR VALUE SENT===>"+str(twist_object.angular.z))
-
-		# Make it start turning
-		self.moverobot_object.move_robot(twist_object)
 
 	def clean_up(self):
 		self.moverobot_object.clean_class()
