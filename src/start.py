@@ -26,7 +26,7 @@ class LineFollower(object):
 		
 		# Crop the image
 		height, width, channels = cv_image.shape
-		descentre = 200
+		descentre = 220
 		rows_to_watch = 20
 		crop_img = cv_image[(height)/2+descentre:(height)/2+(descentre+rows_to_watch)][1:width]
 
@@ -64,15 +64,15 @@ class LineFollower(object):
 			
 			error_x = cx - width / 2;
 			twist_object = Twist();
-			twist_object.linear.x = 0.2;
-			twist_object.angular.z = -error_x / 200;
+			twist_object.linear.x = 0.5;
+			twist_object.angular.z = -error_x / 50;
 
 			self.moverobot_object.move_robot(twist_object)
 			
 		except ZeroDivisionError: # When no line is found - Recovery Behaviour
 			rospy.loginfo("Finding Target...")
 			twist_object = Twist()
-			twist_object.angular.z = 0.5
+			twist_object.angular.z = 1
 			self.moverobot_object.move_robot(twist_object)
 
 		
