@@ -69,7 +69,7 @@ class LineFollower(object):
 
 			self.moverobot_object.move_robot(twist_object)
 			
-		except ZeroDivisionError: # When no line is found
+		except ZeroDivisionError: # When no line is found - Recovery Behaviour
 			rospy.loginfo("Finding Target...")
 			twist_object = Twist()
 			twist_object.angular.z = 0.5
