@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>line_follower_ros</name>
+  <name>line_maze_ros</name>
   <version>0.0.0</version>
-  <description>The blob_track package</description>
+  <description>The line_maze_ros package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

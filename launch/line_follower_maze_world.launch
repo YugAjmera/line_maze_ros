@@ -3,13 +3,13 @@
 	
 	<!-- Launch custom world Gazebo  -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" default="$(find line_follower_ros)/worlds/maze.world"/>
+		<arg name="world_name" default="$(find line_maze_ros)/worlds/maze.world"/>
 		<arg name="paused" value="false"/>
 		<arg name="gui" value="true"/>
 	</include>
 
 	<!-- Spawn the car model --> 
-	<include file="$(find line_follower_ros)/launch/spawn_car.launch" />
+	<include file="$(find line_maze_ros)/launch/spawn_car.launch" />
 	
 	 <!--Publish fixed tfs 	-->
 
