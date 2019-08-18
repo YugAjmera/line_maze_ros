@@ -16,3 +16,5 @@ rosrun line_maze_ros start_multiple.py
 ![](gif/2.gif)
 
 Watch the full video [here](https://www.youtube.com/watch?v=i0bQdSUhcpE)
+
+![](flowchart.png)
