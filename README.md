@@ -1,4 +1,4 @@
-# Line Follower Maze Solver Robot based on ROS using OpenCV
+# Line Follower Maze Solver Robot using OpenCV on ROS
 
 
 1. Simple Line Follower :
@@ -15,3 +15,4 @@ rosrun line_maze_ros start_multiple.py
 ```
 ![](gif/2.gif)
 
+Watch the full video [here](https://www.youtube.com/watch?v=i0bQdSUhcpE)
