@@ -13,5 +13,5 @@ rosrun line_maze_ros start.py
 roslaunch line_maze_ros line_follower_maze_world.launch
 rosrun line_maze_ros start_multiple.py
 ```
-
+![](gif/2.gif)
 
